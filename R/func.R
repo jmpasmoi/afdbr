@@ -1,43 +1,3 @@
-
-#' Segmenting African Market From African Development Bank Group
-#'
-#' @details
-#'
-#' Status of the projects are approved, ongoing, lending and pipeline
-#'
-#' @export
-#'
-getAmount <- function (xx, yy){
-
-  w <- xml2::read_html(xx)
-
-  if ( stringr::str_trim(yy) == "approved" || stringr::str_trim(yy) == "ongoing"){
-
-    z <- rvest::html_nodes(w,"table")
-
-    z <- rvest::html_table(z)[[1]]
-
-    colnames(z) <- c("A","B")
-
-    amount <- dplyr::filter(z,stringr::str_trim(tolower(A)) %in% "total")
-
-    amount <- stringr::str_replace_all(amount[2], "[:alpha:]", "")
-
-  }else{
-
-    z <- rvest::html_nodes (w,"table tbody")
-
-    z <- rvest::html_text(z)
-
-    amount <- stringr::str_replace_all(z, "[:alpha:]", "")
-
-    amount <- stringr::str_trim (amount)
-  }
-
-  return (stringr::str_trim(amount))
-}
-
-
 #' Segmenting African Market From African Development Bank Group
 #'
 #' @details
@@ -49,12 +9,15 @@ getAmount <- function (xx, yy){
 getTitle <- function (x){
 
        y <- xml2::read_html(x)
+
        y <- rvest::html_nodes(y,"title")
+
        y <- rvest::html_text(y)
+
        y <- stringr::str_replace_all(y, afr_extract()[2], "")
+
        y <- substr(y, 1, stringr::str_length(y) - 2)
 
-       #return the title
        return (stringr::str_trim(y))
 }
 
@@ -67,8 +30,11 @@ getTitle <- function (x){
 #' @export
 #'
 cleanAmount <- function(x) {
+
   pattern <- "[:punct:]"
+
   y <- stringr::str_replace_all(x, pattern, "")
+
   return (y)
 }
 
@@ -83,11 +49,13 @@ cleanAmount <- function(x) {
 getProjectDetail <- function (x){
 
   y <- xml2::read_html (x)
+
   z <- rvest::html_nodes(y, "div li strong")
+
   z <- rvest::html_text(z)
 
-  if (length(z) == 7){ ima <- z[6];apsdt <- z[4];aprdt <- z[2];st <- z[3];bp <- NULL}
-  else{ ima <- NULL;apsdt <- z[2];aprdt <- NULL;st <-NULL;bp <- z[3] }
+  if (length(z) == 7){ ima <- z[6];apsdt <- z[4];aprdt <- z[2];st <- z[3];bp <- ""}
+  else{ ima <- "";apsdt <- z[2];aprdt <- "";st <-"";bp <- z[3] }
 
           w <- cbind(
                           implementing_agency = ima,
@@ -96,6 +64,7 @@ getProjectDetail <- function (x){
                           start_date = st,
                           board_presentation = bp
                     )
+         w <- as.data.frame(w)
          return(w)
 }
 #' Segmenting African Market From African Development Bank Group
@@ -141,7 +110,6 @@ getStatus <- function (x){
   return (stringr::str_trim(tolower(substr(x, 1, stringr::str_length(x) - 4))))
 }
 
-
 #' Segmenting African Market From African Development Bank Group
 #'
 #' @details
@@ -164,7 +132,9 @@ getCountry <- function (x){
   if (stringr::str_length(y) >= 30){
 
     e <- unlist(gregexpr(pattern = ":", y)) + 1
+
     y <- stringr::str_trim(substr(y, e, stringr::str_length(y)))
+
     y <- stringi::stri_extract_last_boundaries(y)
 
   }
@@ -220,15 +190,23 @@ getSearchReference <- function (x){
     if (j %% 3 == 0){
 
                status  <- getStatus(ui[j,])
+
                country <- getCountry(ui[j-1,])
+
                link    <- paste(afr_extract()[3], getLink(ui[j-2,]),sep="")
+
                projectID <- getLink(ui[j-2,])
+
                amount  <- getAmount(link,status)
+
                amount  <- cleanAmount(amount)
+
                title   <- getTitle(link)
+
                details <- getProjectDetail(link)
 
                vloop <- data.frame(country,projectID,title,status,amount,details)
+
                valr  <- rbind(valr,vloop)
     }
 
@@ -247,13 +225,15 @@ getSearchReference <- function (x){
 getData <- function (x,link){
 
 
-        valr <- data.frame ()
+       #print (link)
+
+       valr <- data.frame()
 
        for (j in 1 : x - 1){
 
             if (j > 0) {
 
-                urlr <- paste(link, j, sep = "")
+                urlr <- paste(link, j, sep = "/")
 
                 vloop <- getSearchReference(urlr)
 
