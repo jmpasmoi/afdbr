@@ -2,6 +2,7 @@
 
 export(afr_extract)
 export(afr_list_sector)
+export(afr_project_st)
 export(afr_sct_value)
 export(afr_sector_df)
 export(cleanAmount)
