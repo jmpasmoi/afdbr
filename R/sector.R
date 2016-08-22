@@ -41,11 +41,21 @@ afr_sct_value <- function (sector){
   else if(sct == "gender"){val <- "gender"}
   else if(sct == "transport"){val <- "transport"}
   else if(sct == "water"){val <- "water-supply-sanitation"}
-  else {stop("It does not correspond to any sector")}
+  else {val <- "1"}
 
   return (val)
 }
 
+#' Segmenting African Market From African Development Bank Group
+#'
+#' @details
+#' List of the status of projects
+#'
+#' @export
+afr_project_st <- function(){
+   st <- c("ongoing","approved","lending","pipeline")
+   print(st)
+}
 
 
 
