@@ -4,9 +4,19 @@
 \alias{afr_sector_df}
 \title{Segmenting African Market From African Development Bank Group}
 \usage{
-afr_sector_df(sector)
+afr_sector_df(sector, status, na.rm = TRUE, ...)
+}
+\arguments{
+\item{sector}{the name of the sector or list of sectors}
+
+\item{status}{you can filter the result of sectors by status.}
 }
 \description{
 Segmenting African Market From African Development Bank Group
+}
+\details{
+Reference for to visualize all statuses \code{\link{afr_project_st}()}
+
+Reference for to visualize all sectors \code{\link{afr_list_sector}()}
 }
 
