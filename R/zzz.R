@@ -11,7 +11,33 @@
 #'
 #' @export
 #'
-afr_sector_df <- function (sector,status,na.rm = TRUE, ...){
+afr_sector_df <- function (
+                             sector,
+                             status = c("ongoing","approved","lending","pipeline"),
+                             na.rm = TRUE,
+                             from,
+                             to,
+                             ...
+                           ){
+
+  ####<[1]
+  fct <-  formals(afr_sector_df)
+
+  namesize <- names(f)
+
+  fct_st <- do.call(missing, list(namesize[2]))
+
+  fct_from <- do.call(missing, list(namesize[4]))
+
+  fct_to <- do.call(missing, list(namesize[5]))
+
+  #cond
+  if(fct_from == TRUE && fct_to == TRUE){ fct_from <- 0; fct_to <- 0}
+  if(fct_from == TRUE && fct_to == FALSE){ fct_from <- to; fct_to <- to}
+  if(fct_from == FALSE && fct_to == TRUE){ fct_to <- from; fct_from <- from}
+  if(fct_from == FALSE && fct_to == FALSE){ fct_from <- from; fct_to <- to}
+
+  ####[1]> Not yet finished
 
   x <- sector
 
