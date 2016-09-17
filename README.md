@@ -1,5 +1,5 @@
 # afdbr
 
-Market segmentation Using Data From African Development Bank Group
+IE from unstructured data 
 
 ###Not yet finished
