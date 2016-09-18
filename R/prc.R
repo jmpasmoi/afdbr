@@ -35,3 +35,13 @@ getAmount <- function (xx, yy){
 
   return (stringr::str_trim(amount))
 }
+
+#'Deal with the date
+
+#' @export
+
+dt_range <- function(x, a, b){
+
+  x <= b &  x>= a
+
+}
