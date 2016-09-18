@@ -1,7 +1,7 @@
 #' Segmenting African Market From African Development Bank Group
 #'
 #' @param sector the name of the sector or list of sectors
-#' @param status you can filter the result of sectors by status.
+#' @param project_status you can filter the result of sectors by status.
 #'
 #' @details
 #'
@@ -11,33 +11,15 @@
 #'
 #' @export
 #'
-afr_sector_df <- function (
-                             sector,
-                             status = c("ongoing","approved","lending","pipeline"),
-                             na.rm = TRUE,
-                             from,
-                             to,
-                             ...
-                           ){
+afr_sector_df <- function(sector, ..., project_status = c("ongoing","approved","lending","pipeline"), na.rm = TRUE){
 
-  ####<[1]
   fct <-  formals(afr_sector_df)
 
-  namesize <- names(f)
+  fct_name <- names(fct)
 
-  fct_st <- do.call(missing, list(namesize[2]))
+  fct_st <- do.call(missing, list(fct_name[3]))
 
-  fct_from <- do.call(missing, list(namesize[4]))
-
-  fct_to <- do.call(missing, list(namesize[5]))
-
-  #cond
-  if(fct_from == TRUE && fct_to == TRUE){ fct_from <- 0; fct_to <- 0}
-  if(fct_from == TRUE && fct_to == FALSE){ fct_from <- to; fct_to <- to}
-  if(fct_from == FALSE && fct_to == TRUE){ fct_to <- from; fct_from <- from}
-  if(fct_from == FALSE && fct_to == FALSE){ fct_from <- from; fct_to <- to}
-
-  ####[1]> Not yet finished
+  if(fct_st == TRUE){ fct_st <- c("ongoing","approved","lending","pipeline") }else{ fct_st <- project_status}
 
   x <- sector
 
@@ -49,10 +31,13 @@ afr_sector_df <- function (
 
      sct <- afr_sct_value(x[i])
 
-     if (sct == "1" ){
-         warning(paste ("The sector", x[i],
-                        "is not found. Please type afr_list_sector() and conform",
-                         sep=" ")
+     if(sct == "1" ){
+         warning(
+
+                  paste("The sector", x[i],
+                                 "is not found. Please type afr_list_sector() and conform",
+                                  sep=" "
+                      )
                  )
        break
      }
@@ -85,10 +70,9 @@ afr_sector_df <- function (
          }
   }
 
-##if(length(status) <> 0){
-##In progress
-##  dfr <- dplyr::filter(dfr,dfr$status %in% status)
-##}
+  dfr <- dfr[dfr$status %in% tolower(fct_st),]
+
+  rownames(dfr) <- NULL
 
   return(dfr)
 }
