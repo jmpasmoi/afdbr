@@ -11,6 +11,7 @@ IE from unstructured data
 
 library(afdbr) #for functions
 
-#>afr_sector_df(sector = c("health","education","agriculture"), status = c("ongoing","approved"), na.rm = TRUE)
+#>afr_sector_df(sector = c("health","education","environment","climate.change"), 
+                         status = c("ongoing","approved"), na.rm = TRUE)
 
 ``` 
