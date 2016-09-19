@@ -9,6 +9,8 @@ Description: The harvest of data from the web platform of African Development Ba
 License: GPL-2
 URL: https://github.com/jmcimula/afdbr
 Imports:
+    magrittr,
+    xml2,
     rvest,
     dplyr,
     stringr,
