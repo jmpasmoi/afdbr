@@ -11,15 +11,15 @@
 #'
 #' @export
 #'
-afr_sector_df <- function(sector, ..., project_status = c("ongoing", "approved", "lending", "pipeline"), na.rm = TRUE){
+afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
 
   fct <-  formals(afr_sector_df)
 
   fct_name <- names(fct)
 
-  fct_st <- do.call(missing, list(fct_name[3]))
+  fct_st <- do.call(missing,  list(fct_name[3]))
 
-  if(fct_st == TRUE){ fct_st <- c("ongoing","approved","lending","pipeline") }else{ fct_st <- project_status}
+  if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- project_status}
 
   x <- sector
 
@@ -34,19 +34,22 @@ afr_sector_df <- function(sector, ..., project_status = c("ongoing", "approved",
      if(sct == "1" ){
          warning(
 
-                  paste("The sector", x[i],
+                  paste("The sector",  x[i],
                                  "is not found. Please type afr_list_sector() and conform",
                                   sep=" "
                       )
                  )
        break
+
+     }else{
+
+       h <- 0
+
+       d <- data.frame (df = h)
+
+       df <- rbind(df, d)
+
      }
-
-     h <- 0
-
-     d <- data.frame (df = h)
-
-     df <- rbind(df, d)
 
   }
 
@@ -62,17 +65,19 @@ afr_sector_df <- function(sector, ..., project_status = c("ongoing", "approved",
 
             y <- xml2::read_html(link)
 
-            np <- getPageNumber(substr(y, unlist(gregexpr(pattern = st, y))[1], unlist(gregexpr(pattern = st, y))[1] + 30))
+            np <- getPageNumber(substr(y, unlist(gregexpr(pattern=st, y))[1], unlist(gregexpr(pattern=st, y))[1]+30))
 
             y <- getData(np, link)
 
-            dfr <- rbind(dfr, cbind(y, sector = x[i]))
-         }
+            dfr <- rbind(dfr,  cbind(y,  sector = x[i]))
+       }
+
+     dfr <- dfr[dfr$status %in% tolower(fct_st), ]
+
+     rownames(dfr) <- NULL
+
+    return(dfr)
+
   }
 
-  dfr <- dfr[dfr$status %in% tolower(fct_st), ]
-
-  rownames(dfr) <- NULL
-
-  return(dfr)
 }
