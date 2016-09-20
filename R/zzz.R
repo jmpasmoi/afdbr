@@ -11,7 +11,7 @@
 #'
 #' @export
 #'
-afr_sector_df <- function(sector, ..., project_status = c("ongoing","approved","lending","pipeline"), na.rm = TRUE){
+afr_sector_df <- function(sector, ..., project_status = c("ongoing", "approved", "lending", "pipeline"), na.rm = TRUE){
 
   fct <-  formals(afr_sector_df)
 
@@ -46,7 +46,7 @@ afr_sector_df <- function(sector, ..., project_status = c("ongoing","approved","
 
      d <- data.frame (df = h)
 
-     df <- rbind(df,d)
+     df <- rbind(df, d)
 
   }
 
@@ -58,19 +58,19 @@ afr_sector_df <- function(sector, ..., project_status = c("ongoing","approved","
 
        for (i in 1 : z){
 
-            link <- paste(afr_extract()[1],x[i],sep="")
+            link <- paste(afr_extract()[1], sct, sep="")
 
             y <- xml2::read_html(link)
 
-            np <- getPageNumber(substr(y,unlist(gregexpr(pattern=st,y))[1],unlist(gregexpr(pattern=st,y))[1]+30))
+            np <- getPageNumber(substr(y, unlist(gregexpr(pattern = st, y))[1], unlist(gregexpr(pattern = st, y))[1] + 30))
 
-            y <- getData(np,link)
+            y <- getData(np, link)
 
             dfr <- rbind(dfr, cbind(y, sector = x[i]))
          }
   }
 
-  dfr <- dfr[dfr$status %in% tolower(fct_st),]
+  dfr <- dfr[dfr$status %in% tolower(fct_st), ]
 
   rownames(dfr) <- NULL
 
