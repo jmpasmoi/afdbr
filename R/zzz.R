@@ -6,7 +6,6 @@
 #' @details
 #'
 #' Reference for to visualize all statuses \code{\link{afr_project_st}()}
-#'
 #' Reference for to visualize all sectors \code{\link{afr_list_sector}()}
 #'
 #' @export
@@ -26,16 +25,20 @@ afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved
   z <- length(x)
 
   df <- data.frame()
+  chr <- data.frame()
 
   for(i in 1 : z){
 
      sct <- afr_sct_value(x[i])
 
-     if(sct == "1" ){
+     chr <- rbind(chr, data.frame(sct = paste0(sct)))
+
+     if(sct == "1"){
+
          warning(
 
                   paste("The sector",  x[i],
-                                 "is not found. Please type afr_list_sector() and conform",
+                                 "is not found. See afr_list_sector() for more details",
                                   sep=" "
                       )
                  )
@@ -53,30 +56,58 @@ afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved
 
   }
 
-  dfr <- data.frame()
-
   if(nrow(df) == z){
 
+
+     rp <- ""
      st <- afr_extract()[4]
+     gp <- afr_extract()[5]
+
+     chr <- as.data.frame(chr)
+     dfr <- data.frame(check.rows= FALSE)
 
        for (i in 1 : z){
 
-            link <- paste(afr_extract()[1], sct, sep="")
+            link <- paste(afr_extract()[1], chr[i,], sep = "")
 
-            y <- xml2::read_html(link)
+            w <- base::readLines(link, warn = F)
 
-            np <- getPageNumber(substr(y, unlist(gregexpr(pattern=st, y))[1], unlist(gregexpr(pattern=st, y))[1]+30))
+            m <- grep(gp,w)
 
-            y <- getData(np, link)
+            if(identical(class(m),"integer") == TRUE && identical(m, integer(0)) == TRUE){
 
-            dfr <- rbind(dfr,  cbind(y,  sector = x[i]))
+                 y <- xml2::read_html(link)
+
+                 np <- getPageNumber(substr(y, unlist(gregexpr(pattern = st, y))[1], unlist(gregexpr(pattern = st, y))[1]+30))
+
+                 y <- getData(np, link)
+
+                 dfr <- rbind(dfr,  cbind(y,  sector = x[i]))
+
+            }else{
+
+                 t <- x[i]
+
+                 rp <- paste(t, rp, sep = ",")
+            }
+
        }
 
      dfr <- dfr[dfr$status %in% tolower(fct_st), ]
 
      rownames(dfr) <- NULL
 
-    return(dfr)
+     if(nrow(dfr) == 0){ dfr <- "No data found" }else{ dfr <- dfr}
+     if(nchar(rp) < 5){
+              rpo <- 0
+     }else{
+              rpo <- paste("Missing value", rp, sep = ": ")
+              rpo <- substr(rpo,1,nchar(rpo)-1)
+      }
+
+     rpt <- list(data = dfr, report = rpo)
+
+     return(rpt)
 
   }
 
