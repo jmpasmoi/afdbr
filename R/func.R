@@ -8,17 +8,17 @@
 #'
 getTitle <- function (x){
 
-       y <- xml2::read_html(x)
+  y <- xml2::read_html(x)
 
-       y <- rvest::html_nodes(y,"title")
+  y <- rvest::html_nodes(y,"title")
 
-       y <- rvest::html_text(y)
+  y <- rvest::html_text(y)
 
-       y <- stringr::str_replace_all(y, afr_extract()[2], "")
+  y <- stringr::str_replace_all(y, afr_extract()[2], "")
 
-       y <- substr(y, 1, stringr::str_length(y) - 2)
+  y <- substr(y, 1, stringr::str_length(y) - 2)
 
-       return (stringr::str_trim(y))
+  return (stringr::str_trim(y))
 }
 
 #' Segmenting African Market From African Development Bank Group
@@ -57,15 +57,15 @@ getProjectDetail <- function (x){
   if (length(z) == 7){ ima <- z[6];apsdt <- z[4];aprdt <- z[2];st <- z[3];bp <- ""}
   else{ ima <- "";apsdt <- z[2];aprdt <- "";st <-"";bp <- z[3] }
 
-          w <- cbind(
-                          implementing_agency = ima,
-                          appraisal_date = apsdt,
-                          approval_date = aprdt,
-                          start_date = st,
-                          board_presentation = bp
-                    )
-         w <- as.data.frame(w)
-         return(w)
+  w <- cbind(
+    implementing_agency = ima,
+    appraisal_date = apsdt,
+    approval_date = aprdt,
+    start_date = st,
+    board_presentation = bp
+  )
+  w <- as.data.frame(w)
+  return(w)
 }
 #' Segmenting African Market From African Development Bank Group
 #'
@@ -91,7 +91,7 @@ getPageNumber <- function(x){
   y <- as.integer(v/20)
 
   if (v %% 20 > 0) {
-           y <- y + 1
+    y <- y + 1
   }else{   y <- y}
 
   return (y)
@@ -129,7 +129,9 @@ getCountry <- function (x){
 
   y <- stringr::str_trim(substr(x, e, stringr::str_length(x)))
 
-  if (stringr::str_length(y) >= 30){
+  det <- stringr::str_length(y)
+
+  if (identical(class(det),"integer") && det >= 30 && identical(y, character(0)) == FALSE){
 
     e <- unlist(gregexpr(pattern = ":", y)) + 1
 
@@ -189,25 +191,25 @@ getSearchReference <- function (x){
 
     if (j %% 3 == 0){
 
-               status  <- getStatus(ui[j,])
+      status  <- getStatus(ui[j,])
 
-               country <- getCountry(ui[j-1,])
+      country <- getCountry(ui[j-1,])
 
-               link    <- paste(afr_extract()[3], getLink(ui[j-2,]),sep="")
+      link    <- paste(afr_extract()[3], getLink(ui[j-2,]),sep="")
 
-               projectID <- getLink(ui[j-2,])
+      projectID <- getLink(ui[j-2,])
 
-               amount  <- getAmount(link,status)
+      amount  <- getAmount(link,status)
 
-               amount  <- cleanAmount(amount)
+      amount  <- cleanAmount(amount)
 
-               title   <- getTitle(link)
+      title   <- getTitle(link)
 
-               details <- getProjectDetail(link)
+      details <- getProjectDetail(link)
 
-               vloop <- data.frame(country,projectID,title,status,amount,details)
+      vloop <- data.frame(country,projectID,title,status,amount,details)
 
-               valr  <- rbind(valr,vloop)
+      valr  <- rbind(valr,vloop)
     }
 
   }
@@ -225,26 +227,26 @@ getSearchReference <- function (x){
 getData <- function (x,link){
 
 
-       #print (link)
+  #print (link)
 
-       valr <- data.frame()
+  valr <- data.frame()
 
-       for (j in 1 : x - 1){
+  for (j in 1 : x - 1){
 
-            if (j > 0) {
+    if (j > 0) {
 
-                urlr <- paste(link, j, sep = "/")
+      urlr <- paste(link, j, sep = "/")
 
-                vloop <- getSearchReference(urlr)
+      vloop <- getSearchReference(urlr)
 
-            }else{
+    }else{
 
-                vloop <- getSearchReference(link)
-            }
-
-        valr <- rbind(valr, vloop)
+      vloop <- getSearchReference(link)
     }
-        return (valr)
+
+    valr <- rbind(valr, vloop)
+  }
+  return (valr)
 }
 
 
