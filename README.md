@@ -20,7 +20,16 @@ devtools::install_github("jmcimula/afdbr")
 
 library(afdbr) #for functions
 
-afr_sector_df(sector = c("health", "education", "environment", "agriculture"),
+> df <- afr_sector_df(sector = c("health", "education", "environment", "agriculture"),
                     project_status = c("ongoing","approved"), na.rm = TRUE)
+					
+> attributes(df)
+#$names
+#[1] "data"   "report"
+
+> df$report
+# "Missing value: 0"
+
+> df$data
 
 ``` 
