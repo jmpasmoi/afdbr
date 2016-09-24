@@ -2,7 +2,7 @@
 % Please edit documentation in R/zzz.R
 \name{afr_sector_df}
 \alias{afr_sector_df}
-\title{Segmenting African Market From African Development Bank Group}
+\title{IE from unstructured data}
 \usage{
 afr_sector_df(sector, ..., project_status = c("ongoing", "approved",
   "lending", "pipeline"), na.rm = TRUE)
@@ -13,7 +13,7 @@ afr_sector_df(sector, ..., project_status = c("ongoing", "approved",
 \item{project_status}{you can filter the result of sectors by status.}
 }
 \description{
-Segmenting African Market From African Development Bank Group
+IE from unstructured data
 }
 \details{
 Reference for to visualize all statuses \code{\link{afr_project_st}()}
