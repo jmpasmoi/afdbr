@@ -17,7 +17,6 @@ Segmenting African Market From African Development Bank Group
 }
 \details{
 Reference for to visualize all statuses \code{\link{afr_project_st}()}
-
 Reference for to visualize all sectors \code{\link{afr_list_sector}()}
 }
 
