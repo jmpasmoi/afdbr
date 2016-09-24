@@ -1,4 +1,4 @@
-#' Segmenting African Market From African Development Bank Group
+#' IE from unstructured data
 #'
 #' @param sector the name of the sector or list of sectors
 #' @param project_status you can filter the result of sectors by status.
