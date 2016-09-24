@@ -107,7 +107,7 @@ afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved
 
      rpt <- list(data = dfr, report = rpo)
 
-     return(rpt)
+     invisible(rpt)
 
   }
 
