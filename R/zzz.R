@@ -33,7 +33,7 @@ afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved
 
      chr <- rbind(chr, data.frame(sct = paste0(sct)))
 
-     if(sct == "1"){
+     if(is.null(sct)){
 
          warning(
 
