@@ -41,7 +41,7 @@ afr_sct_value <- function (sector){
   else if(sct == "gender"){val <- "gender"}
   else if(sct == "transport"){val <- "transport"}
   else if(sct == "water"){val <- "water-supply-sanitation"}
-  else {val <- "1"}
+  else {val <- NULL }
 
   return (val)
 }
