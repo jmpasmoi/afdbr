@@ -4,13 +4,13 @@
 \alias{afr_sector_df}
 \title{IE from unstructured data}
 \usage{
-afr_sector_df(sector, ..., project_status = c("ongoing", "approved",
-  "lending", "pipeline"), na.rm = TRUE)
+afr_sector_df(sector, ..., pr.status = c("ongoing", "approved", "lending",
+  "pipeline"), na.rm = TRUE)
 }
 \arguments{
 \item{sector}{the name of the sector or list of sectors}
 
-\item{project_status}{you can filter the result of sectors by status.}
+\item{pr.status}{you can filter the result of sectors by status.}
 }
 \description{
 IE from unstructured data
