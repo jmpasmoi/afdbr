@@ -1,7 +1,7 @@
 #' IE from unstructured data
 #'
 #' @param sector the name of the sector or list of sectors
-#' @param project_status you can filter the result of sectors by status.
+#' @param pr.status you can filter the result of sectors by status.
 #'
 #' @details
 #'
@@ -10,18 +10,18 @@
 #'
 #' @export
 #'
-afr_sector_df <- function(sector,  ...,  project_status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
+afr_sector_df <- function(sector,  ...,  pr.status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
 
+  pr_st <- match.arg(pr.status,several.ok=TRUE)
   fct <-  formals(afr_sector_df)
 
   fct_name <- names(fct)
 
-  fct_st <- do.call(missing,  list(fct_name[3]))
+  fct_st <- do.call(missing,list(fct_name[3]))
 
-  if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- project_status}
+  if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- pr_st}
 
   x <- sector
-
   z <- length(x)
 
   df <- data.frame()
