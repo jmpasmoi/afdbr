@@ -2,7 +2,7 @@
 #'
 afr_data_comp <- function(project, src.comp=c("un", "worldbank", "eu"), search=TRUE){
 
-  src <- match.arg(src.comp)
+  src <- match.arg(src.comp,several.ok=T)
   site <- base::grep(scr, afr_extract())
   wb <- afr_extract()[site]
 
