@@ -1,7 +1,8 @@
 #' Project comparison
 #'
-afr_data_comp(project, dt_compare = c("un", "worldbank", "eu")){
+afr_data_comp(project, src.comp = c("un", "worldbank", "eu")){
 
-  NULL
+  src <- match.arg(src.comp)
+  site <- base::match(scr, afr_extract())
 
 }
