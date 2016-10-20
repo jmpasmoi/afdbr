@@ -22,9 +22,7 @@ library(afdbr) #for functions
 
 > df <- afr_segment_df(
                         segment = c("health", "education", "environment", "agriculture"),
-                        pr.status = c("ongoing","approved"), 
-			na.rm = TRUE
-		      )				
+                        pr.status = c("ongoing","approved"), na.rm = TRUE)				
 > attributes(df)
 #$names
 #[1] "data"   "report"
