@@ -20,9 +20,11 @@ devtools::install_github("jmcimula/afdbr")
 
 library(afdbr) #for functions
 
-> df <- afr_sector_df(sector = c("health", "education", "environment", "agriculture"),
-                    pr.status = c("ongoing","approved"), na.rm = TRUE)
-					
+> df <- afr_segment_df(
+                        segment = c("health", "education", "environment", "agriculture"),
+                        pr.status = c("ongoing","approved"), 
+			na.rm = TRUE
+		      )				
 > attributes(df)
 #$names
 #[1] "data"   "report"
