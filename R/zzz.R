@@ -1,19 +1,19 @@
 #' IE from unstructured data
 #'
-#' @param sector the name of the sector or list of sectors
-#' @param pr.status you can filter the result of sectors by status.
+#' @param segment the name of the segment or list of segments
+#' @param pr.status you can filter the result of segments by status.
 #'
 #' @details
 #'
 #' Reference for to visualize all statuses \code{\link{afr_project_st}()}
-#' Reference for to visualize all sectors \code{\link{afr_list_sector}()}
+#' Reference for to visualize all segments \code{\link{afr_list_segment}()}
 #'
 #' @export
 #'
-afr_sector_df <- function(sector,  ...,  pr.status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
+afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
 
   pr_st <- match.arg(pr.status,several.ok=TRUE)
-  fct <-  formals(afr_sector_df)
+  fct <-  formals(afr_segment_df)
 
   fct_name <- names(fct)
 
@@ -21,7 +21,7 @@ afr_sector_df <- function(sector,  ...,  pr.status = c("ongoing", "approved", "l
 
   if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- pr_st}
 
-  x <- sector
+  x <- segment
   z <- length(x)
 
   df <- data.frame()
@@ -37,8 +37,8 @@ afr_sector_df <- function(sector,  ...,  pr.status = c("ongoing", "approved", "l
 
          warning(
 
-                  paste("The sector",  x[i],
-                                 "is not found. See afr_list_sector() for more details",
+                  paste("The segment",  x[i],
+                                 "is not found. See afr_list_segment() for more details",
                                   sep=" "
                       )
                  )
@@ -82,7 +82,7 @@ afr_sector_df <- function(sector,  ...,  pr.status = c("ongoing", "approved", "l
 
                  y <- getData(np, link)
 
-                 dfr <- rbind(dfr,  cbind(y,  sector = x[i]))
+                 dfr <- rbind(dfr,  cbind(y,  segment = x[i]))
 
             }else{
 
