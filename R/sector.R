@@ -1,17 +1,17 @@
 #' Segmenting African Market From African Development Bank Group
 #'
 #' @details
-#' List of public sectors
+#' List of available segments
 #'
 #' @export
 
-afr_list_sector <- function() {
+afr_list_segment <- function() {
 
   y <- list(
-    title = "List of public sectors",
-    sector1 = c("climate.change","agriculture","economic", "water"),
-    sector2 = c("education","energy","environment", "transport"),
-    sector3 = c("health","information","infrastructure","gender","human")
+    title = "List of available segments",
+    segment1 = c("climate.change","agriculture","economic", "water"),
+    segment2 = c("education","energy","environment", "transport"),
+    segment3 = c("health","information","infrastructure","gender","human")
   )
 
   print(y)
@@ -22,9 +22,9 @@ afr_list_sector <- function() {
 #'
 #'@export
 #'
-afr_sct_value <- function (sector){
+afr_sct_value <- function (segment){
 
-  sct <- tolower(stringr::str_trim(sector))
+  sct <- tolower(stringr::str_trim(segment))
 
   val <- NULL
 
@@ -54,7 +54,7 @@ afr_sct_value <- function (sector){
 #' @export
 afr_project_st <- function(){
    st <- c("ongoing","approved","lending","pipeline")
-   print(st)
+   return(st)
 }
 
 
