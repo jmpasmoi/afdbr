@@ -33,3 +33,15 @@ library(afdbr) #for functions
 > df$data
 
 ``` 
+Below script to run all segments
+
+``` r
+df <- afr_segment_df(
+                       segment = c("climate.change","agriculture","economic", 
+						                         "water","education","energy","environment",
+									                   "transport","health","information","infrastructure",
+									                   "gender","human"),
+                       pr.status = c("ongoing","approved","lending","pipeline"), 
+						           na.rm = TRUE
+					         )
+```
