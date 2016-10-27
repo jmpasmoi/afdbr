@@ -145,7 +145,7 @@ getCountry <- function (x){
   else if (stringr::str_detect (tolower(y),"ncipe") == TRUE) {y <- "Sao Tome and Principe"}
   else { y <- y }
 
-  return (y)
+  return (stringr::str_replace_all(y, "[:punct:]", ""))
 
 }
 
