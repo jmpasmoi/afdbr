@@ -1,12 +1,12 @@
 
 df <- read.csv("afdb.csv")
 
-colnames(df) <- c("num","country", "project_id", "title",
-                    "status","amount","implementing_agency", 
-					"appraisal_date", "approval_date", "start_date", 
-					"board_presentation","segment", "report"
-				)
+colnames(df) <- c(
+"num","country", "project_id", "title","status","amount","implementing_agency", 
+"appraisal_date", "approval_date", "start_date","board_presentation","segment", "report"
+)
 
+#Getting the count of project per country, status, segment
 an <- dplyr::select(df, country, status, segment, project_id)
 an <- cbind(an,nb=1)
 		  
@@ -19,7 +19,12 @@ from ap p, app b where p.country = b.country and p.status = b.status and p.segme
 group by p.country, p.status, p.segment, b.nb"
 )
 
-
+#Getting the count of segment per status
+aps <- dplyr::select(df, segment, status)
+aps <- cbind(aps,nb=1)
+aps <- sqldf::sqldf("
+select segment, status,sum(nb) cnt from aps group by segment,status
+")
 
 
 ## afr_dashboard_country <- function(data) {
