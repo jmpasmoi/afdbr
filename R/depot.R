@@ -26,6 +26,13 @@ aps <- sqldf::sqldf("
 select segment, status,sum(nb) cnt from aps group by segment,status
 ")
 
+#Getting count of project per country
+apc <- sqldf::sqldf("
+select country, sum(number) number from apk group by country
+")
+
+#Getting the project, country, status and amount
+apm <- dplyr::select(df, segment, country, status, segment, project_id, amount)
 
 ## afr_dashboard_country <- function(data) {
 ##if(missing(data)){
