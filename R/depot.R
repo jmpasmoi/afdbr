@@ -1,4 +1,3 @@
-
 df <- read.csv("afdb.csv")
 
 colnames(df) <- c(
@@ -32,7 +31,10 @@ select country, sum(number) number from apk group by country
 ")
 
 #Getting the project, country, status and amount
-apm <- dplyr::select(df, segment, country, status, segment, project_id, amount)
+apm <- dplyr::select(df, country, status, segment, project_id, amount)
+
+#Getting date of projects
+aprj <- dplyr::select(df, segment, country, status, segment, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
 
 ## afr_dashboard_country <- function(data) {
 ##if(missing(data)){
