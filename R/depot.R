@@ -1,3 +1,4 @@
+
 df <- read.csv("afdb.csv")
 
 colnames(df) <- c(
@@ -34,8 +35,17 @@ select country, sum(number) number from apk group by country
 apm <- dplyr::select(df, country, status, segment, project_id, amount)
 
 #Getting date of projects
-aprj <- dplyr::select(df, segment, country, status, segment, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
+aprj <- dplyr::select(df, segment, country, status, segment, project_id, amount, appraisal_date, approval_date, start_date)
 
+pmpr <- dplyr::filter(aprj, as.Date(start_date,"%d/%m/%Y") >= as.Date("01/01/2014","%d/%m/%Y") & as.Date(start_date,"%d/%m/%Y") <= as.Date("21/05/2017","%d/%m/%Y"))
+
+
+sqldf::sqldf("
+select segment, country,
+count(case when status = 'ongoing' then status end) as ongoing,
+count(case when status = 'approved' then status end) as approved 
+from pmpr group by segment,  country
+")
 ## afr_dashboard_country <- function(data) {
 ##if(missing(data)){
 ##    objects <- ls(pos = 1)    
