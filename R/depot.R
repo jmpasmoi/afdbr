@@ -35,65 +35,61 @@ select country, sum(number) number from apk group by country
 apm <- dplyr::select(df, country, status, segment, project_id, amount)
 
 #Getting date of projects
-aprj <- dplyr::select(df, segment, country, status, segment, project_id, amount, appraisal_date, approval_date, start_date)
+aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date)
 
 ##pmpr <- dplyr::filter(aprj, as.Date(start_date,"%d/%m/%Y") >= as.Date("01/01/2010","%d/%m/%Y") & as.Date(start_date,"%d/%m/%Y") <= as.Date("21/05/2017","%d/%m/%Y"))
 
 pmpr <- dplyr::filter(aprj, as.Date(start_date,"%d/%m/%Y") >= as.Date("01/01/2010","%d/%m/%Y"))
 
-
-sqldf::sqldf("
-select segment, country, substr(start_date,7,10) startdate,
-count(case when status = 'ongoing' then status end) as ongoing,
-count(case when status = 'approved' then status end) as approved,
-count(case when status = 'pipeline' then status end) as pipeline,
-count(case when status = 'lending' then status end) as lending
-from pmpr group by segment, country, substr(start_date,7,10)
-")
-
-
 cf <- sqldf::sqldf("
-select segment, country, substr(start_date,7,10) startdate,
+select segment, country, status, substr(start_date,7,10) startdate,
                    count(case when status = 'ongoing' then status end) as ongoing,
                    count(case when status = 'approved' then status end) as approved,
                    count(case when status = 'pipeline' then status end) as pipeline,
                    count(case when status = 'lending' then status end) as lending
-                   from pmpr group by segment, country, substr(start_date,7,10)
+                   from pmpr group by segment, status, country, substr(start_date,7,10)
                    ")
+#only ongoing
+dfon <- cf[,c("segment","status","country","startdate","ongoing")]
 
-cfon <- cf[,c("segment","country","startdate","ongoing")]
+#DECISION TREE
+cfon <- sqldf::sqldf("
+select country, status, segment, startdate, sum(ongoing) ongoing
+from dfon where startdate >= 2010 and startdate <= 2016 and country not like '%national%'
+group by segment, status, country, startdate
+")
 
+cfon <- tidyr::spread(cfon,startdate,ongoing)
+cfon[ is.na(cfon) ] <- 0 
+cfon[["sums"]] <- rowSums(cfon[,4:ncol(cfon)])
+cfon <- dplyr::filter(cfon, sums >= 3)
+cfon[["sums"]] <- NULL
+begin <- last <- 1:nrow(cfon)
+cfon <- cbind(begin,cfon,last)
+
+library(rpart)
+library(rattle)
+library(rpart.plot)
+library(RColorBrewer)
+
+fit <- rpart(formula = `2010` ~ ., data = cfon, control = rpart.control(minsplit = 2, minbucket = 1, cp = 0.001), parms = list(split = "information"))
+fancyRpartPlot(fit)
+
+#SLOPEGRAPH
 cfon <- sqldf::sqldf("
 select country, startdate, sum(ongoing) ongoing
-from cfon 
-where startdate >= 2010 and startdate <= 2016 and country not like '%national%'
+from dfon where startdate >= 2010 and startdate <= 2016 and country not like '%national%'
 group by  country, startdate
 ")
 
 cfon <- tidyr::spread(cfon,startdate,ongoing)
-
 cftmp <- cfon
-
 rownames(cfon) <- cftmp$country
 remove(cftmp)
 cfon <- cfon[,-1]
-
 begin <- last <- 1:nrow(cfon)
-
 cfon <- cbind(begin,cfon,last)
 
 slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 
 
-## afr_dashboard_country <- function(data) {
-##if(missing(data)){
-##    objects <- ls(pos = 1)    
-##    if(length(objects) == 0) stop("No objects found. Please create a data.frame to continue", call. = FALSE)   
-##    findf <- objects[sapply(objects, function(x) is.data.frame(get(x)))]
-##}else {
-##    findf <- as.character(match.call())[2]
-##  }
-##  findf
-##}
-
- 
