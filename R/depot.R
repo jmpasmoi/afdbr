@@ -1,5 +1,5 @@
 
-df <- read.csv("afdb.csv")
+df <- read.csv("~/GitHub/afdbr/afdb.csv")
 
 colnames(df) <- c(
 "num","country", "project_id", "title","status","amount","implementing_agency", 
@@ -62,7 +62,17 @@ group by segment, status, country, startdate
 cfon <- tidyr::spread(cfon,startdate,ongoing)
 cfon[ is.na(cfon) ] <- 0 
 cfon[["sums"]] <- rowSums(cfon[,4:ncol(cfon)])
+tcfon <- cfon #this data will be used to visualize the bubble report of countries stands by the choice of sums
 cfon <- dplyr::filter(cfon, sums >= 3)
+
+##################BUBBLE##########################################################
+library(bubbles)
+fc <- dplyr::filter(tcfon, sums >= 5)
+t <- data.frame(tbl = unique(fc$country))
+n <- nrow(t)
+bubbles(value = runif(n), label = t$tbl, color = rainbow(n, alpha = NULL)[sample(n)])
+###################################################################################
+
 cfon[["sums"]] <- NULL
 begin <- last <- 1:nrow(cfon)
 cfon <- cbind(begin,cfon,last)
