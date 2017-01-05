@@ -10,7 +10,7 @@ afr_list_segment <- function() {
   y <- list(
     title = "List of available segments",
     segment1 = c("climate.change","agriculture","economic", "water"),
-    segment2 = c("education","energy","environment", "transport"),
+    segment2 = c("education","energy","environment", "transport", "private sector"),
     segment3 = c("health","information","infrastructure","gender","human")
   )
 
@@ -41,6 +41,7 @@ afr_sct_value <- function (segment){
   else if(sct == "gender"){val <- "gender"}
   else if(sct == "transport"){val <- "transport"}
   else if(sct == "water"){val <- "water-supply-sanitation"}
+  else if(sct == "private.sector" || sct == "private_sector" || sct == "private" ){val <- "private-sector"}
   else {val <- NULL }
 
   return (val)
