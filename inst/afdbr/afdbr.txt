@@ -1,7 +1,7 @@
 ##AFRICAN DEVELOPMENT BANK GROUP
-http://www.afdb.org/en/projects-and-operations/project-portfolio/
+https://www.afdb.org/en/projects-and-operations/project-portfolio/
 African Development Bank
-http://www.afdb.org/en/projects-and-operations/project-portfolio/project/
+https://www.afdb.org/en/projects-and-operations/project-portfolio/project/
 out of
 Suggestions:
 ##http://www.worldbank.org/en/country/congo/projects/all
