@@ -20,7 +20,8 @@ Imports:
     proto,
     RSQLite,
     DBI,
-    tcltk
+    tcltk,
+    leeper/slopegraph
 BugReports: https://github.com/jmcimula/afdbr/issues
 Encoding: UTF-8
 LazyData: true
