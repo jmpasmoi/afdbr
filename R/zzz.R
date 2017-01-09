@@ -70,11 +70,10 @@ afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", 
 
             link <- paste(afr_extract()[1], chr[i,], sep = "")
 
-            w <- base::readLines(link, warn = F)
-
-            m <- grep(gp,w)
-         
-            closeAllConnections() 
+            con <- file(link, open = "r")
+            w <- base::readLines(con, warn = F)
+            m <- grep(gp,w)         
+            close(con)
 
             if(identical(class(m),"integer") == TRUE && identical(m, integer(0)) == TRUE){
 
