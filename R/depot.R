@@ -100,6 +100,6 @@ cfon <- cfon[,-1]
 begin <- last <- 1:nrow(cfon)
 cfon <- cbind(begin,cfon,last)
 
-slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
+slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 
 
