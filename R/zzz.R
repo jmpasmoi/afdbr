@@ -73,6 +73,8 @@ afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", 
             w <- base::readLines(link, warn = F)
 
             m <- grep(gp,w)
+         
+            closeAllConnections() 
 
             if(identical(class(m),"integer") == TRUE && identical(m, integer(0)) == TRUE){
 
