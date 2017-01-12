@@ -34,20 +34,16 @@ select country, sum(number) number from apk group by country
 #Getting the project, country, status and amount
 apm <- dplyr::select(df, country, status, segment, project_id, amount)
 
-#Getting date of projects
-aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date)
+#########Getting date of projects
+aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
 
-##pmpr <- dplyr::filter(aprj, as.Date(start_date,"%d/%m/%Y") >= as.Date("01/01/2010","%d/%m/%Y") & as.Date(start_date,"%d/%m/%Y") <= as.Date("21/05/2017","%d/%m/%Y"))
-
-pmpr <- dplyr::filter(aprj, as.Date(start_date,"%d/%m/%Y") >= as.Date("01/01/2010","%d/%m/%Y"))
 
 cf <- sqldf::sqldf("
 select segment, country, status, substr(start_date,7,10) startdate,
                    count(case when status = 'ongoing' then status end) as ongoing,
-                   count(case when status = 'approved' then status end) as approved,
-                   count(case when status = 'pipeline' then status end) as pipeline,
-                   count(case when status = 'lending' then status end) as lending
-                   from pmpr group by segment, status, country, substr(start_date,7,10)
+                   count(case when status = 'approved' then status end) as approved
+                   from aprj where substr(start_date,7,10) >= 2010 and length(board_presentation) = 0
+				   group by segment, status, country, substr(start_date,7,10)
                    ")
 #only ongoing
 dfon <- cf[,c("segment","status","country","startdate","ongoing")]
@@ -101,5 +97,45 @@ begin <- last <- 1:nrow(cfon)
 cfon <- cbind(begin,cfon,last)
 
 slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
+
+
+###################################################################################
+AHP 
+###################################################################################
+
+
+Nota:
+(1) Ongoing & Approved use the column start_date 
+    
+	In that case, length(board_presentation) = 0
+
+(2) Lending & Pipeline use board_presentation for the date 
+   
+    In that case, length(start_date) = 0
+
+aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
+
+
+cf <- sqldf::sqldf("
+select segment, country, status, substr(start_date,7,10) startdate,
+                   count(case when status = 'ongoing' then status end) as ongoing,
+                   count(case when status = 'approved' then status end) as approved
+                   from aprj where substr(start_date,7,10) >= 2010 and length(board_presentation) = 0
+				   group by segment, status, country, substr(start_date,7,10)
+                   ")
+
+cf <- sqldf::sqldf("
+select segment,status, substr(start_date,7,10) startdate, count(status) cnt
+from aprj where CAST(substr(start_date,7,10) AS SIGNED INTEGER) >= 2010 AND length(board_presentation) = 0 
+group by segment, status,substr(start_date,7,10)
+UNION
+select segment,status, substr(board_presentation,7,10) startdate, count(status) cnt
+from aprj where CAST(substr(board_presentation,7,10) AS SIGNED INTEGER) >= 2010 AND length(start_date) = 0 
+group by segment, status,substr(board_presentation,7,10)
+")
+
+cfon <- tidyr::spread(cf,startdate,cnt)
+cfon[ is.na(cfon) ] <- 0 
+cfon[["sums"]] <- rowSums(cfon[,3:ncol(cfon)])
 
 
