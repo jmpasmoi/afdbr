@@ -100,7 +100,7 @@ slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 
 
 ###################################################################################
-AHP 
+#AHP 
 ###################################################################################
 
 
@@ -112,6 +112,13 @@ Nota:
 (2) Lending & Pipeline use board_presentation for the date 
    
     In that case, length(start_date) = 0
+
+df <- read.csv("~/GitHub/afdbr/afdb.csv")
+colnames(df) <- c(
+"num","country", "project_id", "title","status","amount","implementing_agency", 
+"appraisal_date", "approval_date", "start_date","board_presentation","segment", "report"
+)
+
 
 aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
 
@@ -138,4 +145,51 @@ cfon <- tidyr::spread(cf,startdate,cnt)
 cfon[ is.na(cfon) ] <- 0 
 cfon[["sums"]] <- rowSums(cfon[,3:ncol(cfon)])
 
+##First resultat : Tracking project from 2010 to 2022 from Pipeline and Lending, and from 2010 to 2017 for Approved and Ongoing
+cfon
 
+write.csv(cfon, file = "cfon.csv")
+
+##Second result has to be more summarized
+ 
+
+
+ 
+ 
+ 
+###################################################################################
+#Data progress 
+###################################################################################
+
+
+fct <- function(){
+  
+  VisualResume::VisualResume(
+  titles.left = c("Project Tracker Dashboard","MYU Lab", 
+                  "*Using Big Data and Machine Learning for Business Dashboards from Large-Scale Data"),
+  titles.left.cex = c(3, 2.5, 1),
+  titles.right.cex = c(3, 2.5, 1),
+  titles.right = c("African Development Bank","Removing blindfold", 
+                   "https://www.afdb.org"),
+  timeline.labels = NULL,
+  timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel",
+                                  "Max Planck Institute", "Old Van", "Gray Matter",
+                                  "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
+                        sub = c("BA. Student", "MS. Student", "PhD. Student", 
+                                "PhD. Researcher", "Methamphetamine Research", "Co-Founder", 
+                                "Chemist", "Chemistry Teacher", "Co-Owner"),
+                        start = c(1976, 1980.1, 1982.2, 1985, 
+                                  1996.5, 1987, 1991, 1995, 2001),
+                        end = c(1980, 1982, 1985, 1987, 1998, 
+                                1992, 1995, 1998, 2003),
+                        side = c(1, 1, 1, 1, 1, 0, 0, 0, 0)),
+  milestones = data.frame(title = 0,sub = 0,year = 0),
+  events = data.frame(years=0,title="Impact"),
+  ##Replace by countries per sector. E.g. programming = Agriculture R=country 10= number projects in this sector
+  interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
+                   "statistics" = c(rep("Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
+                   "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30)),
+                   "Chemistry" = c(rep("Bio", 10), rep("Pharmaceuticals", 50))),
+  year.steps = 2
+)
+}
