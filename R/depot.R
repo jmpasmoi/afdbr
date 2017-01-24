@@ -151,12 +151,7 @@ cfon
 write.csv(cfon, file = "cfon.csv")
 
 ##Second result has to be more summarized
- 
-
-
- 
- 
- 
+  
 ###################################################################################
 #Data progress 
 ###################################################################################
@@ -166,7 +161,7 @@ fct <- function(){
   
   VisualResume::VisualResume(
   titles.left = c("Project Tracker Dashboard","MYU Lab", 
-                  "*Using Big Data and Machine Learning for Business Dashboards from Large-Scale Data"),
+                  "*Thesis title"),
   titles.left.cex = c(3, 2.5, 1),
   titles.right.cex = c(3, 2.5, 1),
   titles.right = c("African Development Bank","Removing blindfold", 
