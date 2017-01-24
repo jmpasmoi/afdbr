@@ -21,7 +21,8 @@ Imports:
     RSQLite,
     DBI,
     tcltk,
-    slopegraph
+    slopegraph,
+    VisualResume
 BugReports: https://github.com/jmcimula/afdbr/issues
 Encoding: UTF-8
 LazyData: true
