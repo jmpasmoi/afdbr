@@ -1,4 +1,3 @@
-
 df <- read.csv("~/GitHub/afdbr/afdb.csv")
 
 colnames(df) <- c(
@@ -36,7 +35,6 @@ apm <- dplyr::select(df, country, status, segment, project_id, amount)
 
 #########Getting date of projects
 aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
-
 
 cf <- sqldf::sqldf("
 select segment, country, status, substr(start_date,7,10) startdate,
@@ -98,11 +96,9 @@ cfon <- cbind(begin,cfon,last)
 
 slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 
-
 ###################################################################################
-#AHP 
+AHP 
 ###################################################################################
-
 
 Nota:
 (1) Ongoing & Approved use the column start_date 
@@ -119,17 +115,15 @@ colnames(df) <- c(
 "appraisal_date", "approval_date", "start_date","board_presentation","segment", "report"
 )
 
-
 aprj <- dplyr::select(df, segment, country, status, project_id, amount, appraisal_date, approval_date, start_date, board_presentation)
 
-
-cf <- sqldf::sqldf("
-select segment, country, status, substr(start_date,7,10) startdate,
-                   count(case when status = 'ongoing' then status end) as ongoing,
-                   count(case when status = 'approved' then status end) as approved
-                   from aprj where substr(start_date,7,10) >= 2010 and length(board_presentation) = 0
-				   group by segment, status, country, substr(start_date,7,10)
-                   ")
+##cf <- sqldf::sqldf("
+##select segment, country, status, substr(start_date,7,10) startdate,
+##                  count(case when status = 'ongoing' then status end) as ongoing,
+##                   count(case when status = 'approved' then status end) as approved
+##                   from aprj where substr(start_date,7,10) >= 2010 and length(board_presentation) = 0
+##				   group by segment, status, country, substr(start_date,7,10)
+##	                 ")
 
 cf <- sqldf::sqldf("
 select segment,status, substr(start_date,7,10) startdate, count(status) cnt
@@ -151,40 +145,61 @@ cfon
 write.csv(cfon, file = "cfon.csv")
 
 ##Second result has to be more summarized
-  
+ 
 ###################################################################################
-#Data progress 
+Data progress 
 ###################################################################################
+ 
+###Completez VisualResume
+ 
+# dk <- sqldf::sqldf("select * from cf where segment = 'agriculture' order by startdate")
+# dk <- transform(dk,newcol=interaction(substr(status,1,3),paste0("(",cnt,")"), sep=''))##Concat
+# dk <- dk %>%  group_by(startdate) %>%
+#       summarise(newcol = toString(sort(unique(newcol))), total =sum(cnt)) %>%
+#		select(startdate, newcol, total)
+#dk <- as.data.frame(dk)
+
+dtrs <- sqldf::sqldf("select * from cf where status = 'approved' order by startdate")
+draft <- sqldf::sqldf("select startdate, sum(cnt) cnt from dtrs where status = 'approved' group by startdate order by startdate")
+tf <- sqldf::sqldf("select segment, startdate,  sum(cnt) cnt from cf where status = 'approved' group by startdate,segment order by startdate")
+
+mm <- transform(tf,newcol=interaction(substr(toupper(segment),1,2),paste0("(",cnt,")"), sep=''))
+mkit <- mm %>%  group_by(startdate) %>%
+        summarise(newcol = toString(sort(unique(newcol))), total =sum(cnt)) %>%
+		select(startdate, newcol, total)
+
+nice <- transform(tf,newcol=interaction(paste0("rep('",segment,"',",cnt,")"), sep=''))
+nkit <- nice %>%  group_by(startdate) %>%
+        filter(cnt >= 5 ) %>% #Only cnt greater or egal to 5
+        summarise(newcol = toString(sort(unique(newcol))),total =sum(cnt)) %>%
+		select(startdate, newcol, total)
+nkit <- as.data.frame(nkit)
+##nkit <- transform(nkit,newcols=interaction(paste0("'",startdate,"' = " ,"c(",newcol,")"), sep=''))
+nkit <- transform(nkit,newcols=interaction(paste0("'",startdate,"' = " ,"c(",newcol,")"), sep=''))
+nkit <- nkit[,-2]
+nkit <- head(nkit[order(nkit$total,decreasing = T),],n=4)
+nkit <- nkit %>% 
+      summarise(newcol = toString(sort(unique(newcols)))) %>%
+	  select(newcol)
 
 
-fct <- function(){
-  
-  VisualResume::VisualResume(
+VisualResume::VisualResume(
   titles.left = c("Project Tracker Dashboard","MYU Lab", 
-                  "*Thesis title"),
+                  "*Using Big Data and Machine Learning for Business Dashboards from Large-Scale Data"),
   titles.left.cex = c(3, 2.5, 1),
   titles.right.cex = c(3, 2.5, 1),
-  titles.right = c("African Development Bank","Removing blindfold", 
+  titles.right = c("African Development Bankit","Removing blindfold", 
                    "https://www.afdb.org"),
-  timeline.labels = NULL,
-  timeline = data.frame(title = c("Grinnell Col", "Ohio U", "U of Basel",
-                                  "Max Planck Institute", "Old Van", "Gray Matter",
-                                  "Sandia Laboratories", "J.P. Wynne High School", "A1A Car Wash"),
-                        sub = c("BA. Student", "MS. Student", "PhD. Student", 
-                                "PhD. Researcher", "Methamphetamine Research", "Co-Founder", 
-                                "Chemist", "Chemistry Teacher", "Co-Owner"),
-                        start = c(1976, 1980.1, 1982.2, 1985, 
-                                  1996.5, 1987, 1991, 1995, 2001),
-                        end = c(1980, 1982, 1985, 1987, 1998, 
-                                1992, 1995, 1998, 2003),
-                        side = c(1, 1, 1, 1, 1, 0, 0, 0, 0)),
+  timeline.labels = c("Report"),
+  timeline = data.frame(title = draft$cnt,
+                        sub = "Nb.of Project",
+                        start = as.integer(draft$startdate),
+                        end = as.integer(draft$startdate),
+                        side = rep(c(0,1), times = length(unique(as.integer(draft$startdate))),
+                                   length.out = length(unique(as.integer(draft$startdate))), each = 1)),
   milestones = data.frame(title = 0,sub = 0,year = 0),
-  events = data.frame(years=0,title="Impact"),
+  events = data.frame(years=mkit$startdate,title=mkit$newcol),
   ##Replace by countries per sector. E.g. programming = Agriculture R=country 10= number projects in this sector
-  interests = list("programming" = c(rep("R", 10), rep("Python", 1), rep("JavaScript", 2), "MatLab"),
-                   "statistics" = c(rep("Trees", 10), rep("Bayesian", 5), rep("Regression", 3)),
-                   "leadership" = c(rep("Motivation", 10), rep("Decision Making", 5), rep("Manipulation", 30)),
-                   "Chemistry" = c(rep("Bio", 10), rep("Pharmaceuticals", 50))),
-  year.steps = 2
+  interests = eval(parse(text=paste("list(",nkit$newcol,")"))),
+  year.steps = 1
 )
-}
