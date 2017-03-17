@@ -1,4 +1,4 @@
-
+/*
 df <- read.csv("~/GitHub/afdbr/afdb.csv")
 
 library(magrittr)
@@ -249,3 +249,4 @@ VisualResume::VisualResume(
   interests = eval(parse(text=paste("list(",nkit$newcol,")"))),
   year.steps = 1
 )
+*/
