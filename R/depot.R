@@ -102,22 +102,19 @@ slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 #	AHP 
 ###################################################################################
 
-
 #Nota:
-#(1) Ongoing & Approved use the column start_date 
+# Ongoing & Approved use the column start_date 
 #    
 #	In that case, length(board_presentation) = 0
 #
-#(2) Lending & Pipeline use board_presentation for the date 
-   
- #   In that case, length(start_date) = 0
+# Lending & Pipeline use board_presentation for the date 
+#   In that case, length(start_date) = 0
 
 df <- read.csv("~/GitHub/afdbr/afdb.csv")
 colnames(df) <- c(
 "num","country", "project_id", "title","status","amount","implementing_agency", 
 "appraisal_date", "approval_date", "start_date","board_presentation","segment", "report"
 )
-
 
 cf <- sqldf::sqldf("
 select segment,status, substr(start_date,7,10) startdate, count(status) cnt
@@ -128,7 +125,6 @@ select segment,status, substr(board_presentation,7,10) startdate, count(status) 
 from df where CAST(substr(board_presentation,7,10) AS SIGNED INTEGER) >= 2010 AND length(start_date) = 0 
 group by segment, status,substr(board_presentation,7,10)
 ")
-
 
 ###################################################################################
 #	Data progress 
@@ -144,7 +140,6 @@ mkit <- mm %>%  group_by(startdate) %>%
         summarise(newcol = toString(sort(unique(newcol))), total =sum(cnt)) %>%
 		select(startdate, newcol, total)
 
-
 nice <- transform(tf,newcol=interaction(paste0("rep('",segment,"',",cnt,")"), sep=''))
 nkit <- nice %>%  group_by(startdate) %>%
         filter(cnt >= 5 ) %>% #Only cnt greater or egal to 5
@@ -158,7 +153,6 @@ nkit <- head(nkit[order(nkit$total,decreasing = T),],n=4)
 nkit <- nkit %>% 
       summarise(newcol = toString(sort(unique(newcols)))) %>%
 	  select(newcol)
-
 
 VisualResume::VisualResume(
   titles.left = c("Project Tracker Dashboard","MYU Lab", 
@@ -181,9 +175,6 @@ VisualResume::VisualResume(
   year.steps = 1
 )
 
-
-
-
 ##SLOPEGRAPH
 slope <- sqldf::sqldf(paste0("select status, startdate, cnt from cf where segment = '",agriculture, "' order by startdate"))
 slp <- tidyr::spread(slope,startdate,cnt)
@@ -195,9 +186,7 @@ slp <- slp[,-1]
 begin <- last <- 1:nrow(slp)
 slp <- cbind(begin,slp, last)
 
-
 ##BUBBLE
-
 rawdec <- sqldf::sqldf("select status, country, startdate from rawcf where segment = 'agriculture' and country not like '%national%'")
 
 rd <- sqldf::sqldf("select country, count(*) sums from rawcf group by country")
@@ -207,17 +196,13 @@ n <- nrow(tbbles)
 bubbles(value = runif(n), label = tbbles$tbl, color = rainbow(n, alpha = NULL)[sample(n)])
 
 ##TREE
-
 rd <- sqldf::sqldf(paste0("select country, status, startdate, count(*) cnt from rawcf where segment = '",tolower(input$selected),"' and country not like '%ALI%' group by status, startdate, country"))
-
 rdtree <- tidyr::spread(rd,startdate,cnt)
 rdtree[ is.na(rdtree) ] <- 0 
 rdtree[["sums"]] <- rowSums(rdtree[,3:ncol(rdtree)])
 rdftree <- dplyr::filter(rdtree, sums >= 3)
 
-
 ##VisualResume based on segment
-
 dtrs <- sqldf::sqldf("select * from cf where segment = 'agriculture'")
 draft <- sqldf::sqldf("select startdate, sum(cnt) cnt from dtrs where segment = 'agriculture' group by startdate")
 tf <- sqldf::sqldf("select status, startdate,  sum(cnt) cnt from cf where segment = 'agriculture' group by status, startdate")
