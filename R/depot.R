@@ -103,14 +103,14 @@ slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 ###################################################################################
 
 
-Nota:
-(1) Ongoing & Approved use the column start_date 
-    
-	In that case, length(board_presentation) = 0
-
-(2) Lending & Pipeline use board_presentation for the date 
+#Nota:
+#(1) Ongoing & Approved use the column start_date 
+#    
+#	In that case, length(board_presentation) = 0
+#
+#(2) Lending & Pipeline use board_presentation for the date 
    
-    In that case, length(start_date) = 0
+ #   In that case, length(start_date) = 0
 
 df <- read.csv("~/GitHub/afdbr/afdb.csv")
 colnames(df) <- c(
