@@ -99,7 +99,7 @@ cfon <- cbind(begin,cfon,last)
 slopegraph::slopegraph(head(cfon, n=20), main = 'Ongoing Project of AfDB')
 
 ###################################################################################
-AHP 
+#	AHP 
 ###################################################################################
 
 
@@ -131,7 +131,7 @@ group by segment, status,substr(board_presentation,7,10)
 
 
 ###################################################################################
-Data progress 
+#	Data progress 
 ###################################################################################
  
 ###Completez VisualResume based on status
