@@ -92,7 +92,7 @@ getPageNumber <- function(x){
 
   if (v %% 20 > 0) {
     y <- y + 1
-  }else{   y <- y}
+  }
 
   return (y)
 }
