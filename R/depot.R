@@ -1,6 +1,8 @@
 
 df <- read.csv("~/GitHub/afdbr/afdb.csv")
 
+library(magrittr)
+
 colnames(df) <- c(
 "num","country", "project_id", "title","status","amount","implementing_agency", 
 "appraisal_date", "approval_date", "start_date","board_presentation","segment", "report"
