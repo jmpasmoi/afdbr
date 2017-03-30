@@ -18,7 +18,7 @@ devtools::install_github("jmcimula/afdbr")
 ``` r
 #snippet
 
-library(afdbr) #for functions
+library(afdbr)
 
 > df <- afr_segment_df(
                         segment = c("health", "education", "environment", "agriculture"),
