@@ -12,6 +12,7 @@ getTitle <- function (x){
   y <- rvest::html_text(y)
   y <- stringr::str_replace_all(y, afr_extract()[2], "")
   y <- substr(y, 1, stringr::str_length(y) - 2)
+
   return (stringr::str_trim(y))
 }
 
