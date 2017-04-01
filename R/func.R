@@ -26,7 +26,7 @@ getTitle <- function (x){
 #'
 cleanAmount <- function(x) {
 
-stopword <- c('[:alpha:]','[:punct:]')
+stopword <- c('[:alpha:]','[:punct:]','[.]')
  y <- x
  for(i in 1:length(stopword)){
     y <- trimws(stringr::str_replace_all(y,stopword[i], ""))
@@ -45,9 +45,7 @@ stopword <- c('[:alpha:]','[:punct:]')
 
 getProjectDetail <- function (x){
 
-  y <- xml2::read_html (x)
-  z <- rvest::html_nodes(y, "ul li strong")
-  z <- rvest::html_text(z)
+z <- x
 
 if(length(z)== 7){
     ima <- z[6]
@@ -170,7 +168,6 @@ getLink <- function (x){
 #'
 getSearchReference <- function (x){
 
-
  y <- xml2::read_html(x)
  y <- rvest::html_nodes(y,"tr td")
  y <- rvest::html_text(y)
@@ -216,10 +213,9 @@ getSearchReference <- function (x){
 
    project_id <- ovx_un[1]
    title  <- getTitle(ovw)
-   status <- getStatus(ovx_un[5])
+   status <- getStatus(ifelse(length(ovx_un)==7, ovx_un[5],ovx_un[4]))
    amount <- trimws(cleanAmount(ovx_trois[1]))
-   details <- getProjectDetail(ovw)
-
+   details <- getProjectDetail(ovx_un)
 
    vloop <- data.frame(country,project_id,title,status,amount,details,key_contact)
    valr  <- rbind(valr,vloop)
