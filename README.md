@@ -40,7 +40,7 @@ df <- afr_segment_df(
 			segment = c("climate.change","agriculture","economic",
 					"water","education","energy","environment",
 					"transport","health","information","infrastructure",
-					"gender","human"),
+					"gender","human","private.sector"),
 			pr.status = c("ongoing","approved","lending","pipeline"), na.rm = TRUE
-                    )
+)
 ```
