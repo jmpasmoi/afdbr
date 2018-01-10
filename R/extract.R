@@ -5,7 +5,6 @@
   data <- readLines(filename, encoding="UTF-8", warn = F)
   data <- data[! grepl("^##", data)]
 }
-
 #' Segmenting African Market From African Development Bank Group
 #' @details
 #' Extract textual information
