@@ -1,13 +1,9 @@
 #' IE from unstructured data
-#'
 #' @param segment the name of the segment or list of segments
 #' @param pr.status you can filter the result of segments by status.
-#'
 #' @details
-#'
 #' Reference for to visualize all statuses \code{\link{afr_project_st}()}
 #' Reference for to visualize all segments \code{\link{afr_list_segment}()}
-#'
 #' @export
 #'
 afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
@@ -19,11 +15,8 @@ afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", 
 
 if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- pr_st}
 
-  x <- segment
-  z <- length(x)
-  df <- data.frame()
-  chr <- data.frame()
-
+  x <- segment;z <- length(x)
+  df <- data.frame();chr <- data.frame()
   for(i in 1 : z){
 
      sct <- afr_sct_value(x[i])
@@ -42,45 +35,32 @@ if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }e
        df <- rbind(df, d)
      }
   }
-
   if(nrow(df) == z){
 
-     rp <- ""
-     st <- afr_extract()[4]
-     gp <- afr_extract()[5]
-
-     chr <- as.data.frame(chr)
+     rp <- "";st <- afr_extract()[4]
+     gp <- afr_extract()[5];chr <- as.data.frame(chr)
      dfr <- data.frame(check.rows= FALSE)
-
        for (i in 1 : z){
-
             link <- paste(afr_extract()[1], chr[i,], sep = "")
             con <- file(link, open = "r")
             w <- base::readLines(con, warn = F)
             m <- grep(gp,w)
             close(con)
-
             if(identical(class(m),"integer") == TRUE && identical(m, integer(0)) == TRUE){
-
                  y <- xml2::read_html(link)
                  np <- getPageNumber(substr(y, unlist(gregexpr(pattern = st, y))[1], unlist(gregexpr(pattern = st, y))[1]+30))
                  y <- getData(np, link)
                  dfr <- rbind(dfr,  cbind(y, segment = x[i]))
-
-
             }else{
                  t <- x[i]
                  rp <- paste(t, rp, sep = ",")
             }
        }
-
      dfr <- dfr[dfr$status %in% tolower(fct_st), ]
      rownames(dfr) <- NULL
-
      if(nrow(dfr) == 0){ dfr <- "No data found" }else{ dfr <- dfr}
      if(nchar(rp) < 5){
-              rpo <- 0
-     }else{
+              rpo <- 0     }else{
               rpo <- paste("Missing value", rp, sep = ": ")
               rpo <- substr(rpo,1,nchar(rpo)-1)
       }
