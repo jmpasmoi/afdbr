@@ -1,9 +1,6 @@
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Getting the title of the project
-#'
 #' @export
 #'
 getTitle <- function (x){
@@ -17,11 +14,8 @@ getTitle <- function (x){
 }
 
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Cleaning the amount
-#'
 #' @export
 #'
 cleanAmount <- function(x) {
@@ -35,30 +29,18 @@ stopword <- c('[:alpha:]','[:punct:]','[.]')
 }
 
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Getting some details on the project like implementing agency, appraisal date, approval date, start date
-#'
 #' @export
 #'
 
 getProjectDetail <- function (x){
 
 z <- x
-
 if(length(z)== 7){
-    ima <- z[6]
-    aps <- z[4]
-    apr <- z[2]
-    st <- z[3]
-    bp <- ""
+    ima <- z[6];aps <- z[4];apr <- z[2];st <- z[3];bp <- ""
 }else{
-    ima <- ""
-    aps <- z[2]
-    apr <- ""
-    st <-""
-    bp <- z[3]
+    ima <- "";aps <- z[2];apr <- "";st <-"";bp <- z[3]
 }
  dp <- cbind(
     implementing_agency = ima,
@@ -71,58 +53,43 @@ if(length(z)== 7){
   return(dp)
 }
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Number of pages to explore
-#'
 #' @export
 #'
 getPageNumber <- function(x){
 
   a <- c("[:alpha:]","[:punct:]",">","<","=")
   v <- x
-
   for (j in 1 : length(a)){
     v <- stringr::str_replace_all(v,a[j],"")
   }
   v <- trimws(stringr::str_replace_all(v,"\n",""))
-
   vf <- 0
-  ifelse(v=="", vf <- 0, vf <- v)
 
+  ifelse(v=="", vf <- 0, vf <- v)
   v <- as.integer(stringr::str_trim(vf))
   y <- as.integer(v/20)
 
   if( (v %% 20 > 0) == TRUE){
     y <- y + 1
   }
-
   return (y)
 }
 
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Getting the status of the project
-#'
 #' @export
 #'
-
 getStatus <- function (x){
   return (stringr::str_trim(tolower(substr(x, 1, stringr::str_length(x) - 4))))
 }
-
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Getting the name of the country
-#'
 #' @export
 #'
-
 getCountry <- function (x){
 
   e <- unlist(gregexpr(pattern = ",", x)) - 1
@@ -136,34 +103,22 @@ if (identical(class(det),"integer") && det >= 30 && identical(y, character(0)) =
     y <- stringr::str_trim(substr(y, e, stringr::str_length(y)))
     y <- stringi::stri_extract_last_boundaries(y)
 }
-
   if(stringr::str_detect (tolower(y),"ivoire") == TRUE) { y <- "Cote d'Ivoire"}
   else if (stringr::str_detect (tolower(y),"ncipe") == TRUE) {y <- "Sao Tome and Principe"}
   else { y <- y }
-
   return (stringr::str_replace_all(y, "[:punct:]", ""))
-
 }
-
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Getting the link of the project
-#'
 #' @export
 #'
-
 getLink <- function (x){
   return (stringr::str_trim(tolower(substr(x, 1, stringr::str_length(x)))))
 }
-
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Function which checks the url of all the project and their status
-#'
 #' @export
 #'
 getSearchReference <- function (x){
@@ -171,26 +126,21 @@ getSearchReference <- function (x){
  y <- xml2::read_html(x)
  y <- rvest::html_nodes(y,"tr td")
  y <- rvest::html_text(y)
-
  v <- as.data.frame(y)
  ol <-  seq(1, nrow(v), by=3)
-
 
  valr <- data.frame()
  for(j in 1:length(ol)){
 
    id <- paste0(v[ol[j],])
    ovw <- paste(afr_extract()[1],tolower(id),sep="")
-
    ovx_un <- xml2::read_html(ovw)
    ovx_un <- rvest::html_nodes(ovx_un,"ul li strong")
    ovx_un <- rvest::html_text(ovx_un)
-
    ovx_deux <- xml2::read_html(ovw)
    ovx_deux <- rvest::html_nodes(ovx_deux,"p")
    ovx_deux <- rvest::html_text(ovx_deux)
    ovx_deux <- ovx_deux[length(ovx_deux)]
-
    ovx_trois <- xml2::read_html(ovw)
    ovx_trois <- rvest::html_nodes(ovx_trois,"tr td")
    ovx_trois <- rvest::html_text(ovx_trois)
@@ -219,19 +169,12 @@ getSearchReference <- function (x){
 
    vloop <- data.frame(country,project_id,title,status,amount,details,key_contact)
    valr  <- rbind(valr,vloop)
-
  }
-
  return(valr)
-
 }
-
 #' Segmenting African Market From African Development Bank Group
-#'
 #' @details
-#'
 #'Browsing all the subpages related to the choice of the user from the interface
-#'
 #' @export
 #'
 getData <- function (x,link){
@@ -240,20 +183,13 @@ getData <- function (x,link){
   val <- x
   valr <- data.frame()
   for (j in 1 : val - 1){
-
     if (j > 0) {
-
       urlr <- paste(pg, j, sep = "/")
       vloop <- getSearchReference(urlr)
-
       }else{
-
       vloop <- getSearchReference(pg)
     }
-
     valr <- rbind(valr, vloop)
   }
   return (valr)
 }
-
-
