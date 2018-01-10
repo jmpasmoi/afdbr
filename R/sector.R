@@ -2,7 +2,6 @@
 #' @details
 #' List of available segments
 #' @export
-
 afr_list_segment <- function() {
   y <- list(
     title = "List of available segments",
@@ -14,7 +13,6 @@ afr_list_segment <- function() {
 }
 #' Segmenting African Market From African Development Bank Group
 #'@export
-#'
 afr_sct_value <- function (segment){
   sct <- tolower(stringr::str_trim(segment))
   val <- NULL
