@@ -2,9 +2,7 @@
 #' @details
 #' Status of the projects are approved, ongoing, lending and pipeline
 #' @export
-#'
 getAmount <- function (xx, yy){
-
   w <- xml2::read_html(xx)
 
   if ( stringr::str_trim(yy) == "approved" || stringr::str_trim(yy) == "ongoing"){
