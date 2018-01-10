@@ -5,20 +5,16 @@
 #' Reference for to visualize all statuses \code{\link{afr_project_st}()}
 #' Reference for to visualize all segments \code{\link{afr_list_segment}()}
 #' @export
-#'
 afr_segment_df <- function(segment,  ...,  pr.status = c("ongoing", "approved", "lending", "pipeline"),  na.rm = TRUE){
-
   pr_st <- match.arg(pr.status,several.ok=TRUE)
   fct <-  formals(afr_segment_df)
   fct_name <- names(fct)
   fct_st <- do.call(missing,list(fct_name[3]))
 
 if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }else{ fct_st <- pr_st}
-
   x <- segment;z <- length(x)
   df <- data.frame();chr <- data.frame()
   for(i in 1 : z){
-
      sct <- afr_sct_value(x[i])
      chr <- rbind(chr, data.frame(sct = paste0(sct)))
      if(is.null(sct)){
@@ -36,7 +32,6 @@ if(fct_st == TRUE){ fct_st <- c("ongoing", "approved", "lending", "pipeline") }e
      }
   }
   if(nrow(df) == z){
-
      rp <- "";st <- afr_extract()[4]
      gp <- afr_extract()[5];chr <- as.data.frame(chr)
      dfr <- data.frame(check.rows= FALSE)
