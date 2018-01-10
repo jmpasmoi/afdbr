@@ -2,7 +2,6 @@
 #' @details
 #'Getting the title of the project
 #' @export
-#'
 getTitle <- function (x){
   y <- xml2::read_html(x)
   y <- rvest::html_nodes(y,"title")
@@ -12,14 +11,11 @@ getTitle <- function (x){
 
   return (stringr::str_trim(y))
 }
-
 #' Segmenting African Market From African Development Bank Group
 #' @details
 #'Cleaning the amount
 #' @export
-#'
 cleanAmount <- function(x) {
-
 stopword <- c('[:alpha:]','[:punct:]','[.]')
  y <- x
  for(i in 1:length(stopword)){
@@ -27,15 +23,11 @@ stopword <- c('[:alpha:]','[:punct:]','[.]')
   }
   return (y)
 }
-
 #' Segmenting African Market From African Development Bank Group
 #' @details
 #'Getting some details on the project like implementing agency, appraisal date, approval date, start date
 #' @export
-#'
-
 getProjectDetail <- function (x){
-
 z <- x
 if(length(z)== 7){
     ima <- z[6];aps <- z[4];apr <- z[2];st <- z[3];bp <- ""
@@ -56,9 +48,7 @@ if(length(z)== 7){
 #' @details
 #'Number of pages to explore
 #' @export
-#'
 getPageNumber <- function(x){
-
   a <- c("[:alpha:]","[:punct:]",">","<","=")
   v <- x
   for (j in 1 : length(a)){
@@ -76,12 +66,10 @@ getPageNumber <- function(x){
   }
   return (y)
 }
-
 #' Segmenting African Market From African Development Bank Group
 #' @details
 #'Getting the status of the project
 #' @export
-#'
 getStatus <- function (x){
   return (stringr::str_trim(tolower(substr(x, 1, stringr::str_length(x) - 4))))
 }
@@ -89,9 +77,7 @@ getStatus <- function (x){
 #' @details
 #'Getting the name of the country
 #' @export
-#'
 getCountry <- function (x){
-
   e <- unlist(gregexpr(pattern = ",", x)) - 1
   x <- substr(x, 1, e)
   e <- unlist(gregexpr(pattern = ":", x)) + 1
@@ -112,7 +98,6 @@ if (identical(class(det),"integer") && det >= 30 && identical(y, character(0)) =
 #' @details
 #'Getting the link of the project
 #' @export
-#'
 getLink <- function (x){
   return (stringr::str_trim(tolower(substr(x, 1, stringr::str_length(x)))))
 }
@@ -120,9 +105,7 @@ getLink <- function (x){
 #' @details
 #'Function which checks the url of all the project and their status
 #' @export
-#'
 getSearchReference <- function (x){
-
  y <- xml2::read_html(x)
  y <- rvest::html_nodes(y,"tr td")
  y <- rvest::html_text(y)
@@ -131,7 +114,6 @@ getSearchReference <- function (x){
 
  valr <- data.frame()
  for(j in 1:length(ol)){
-
    id <- paste0(v[ol[j],])
    ovw <- paste(afr_extract()[1],tolower(id),sep="")
    ovx_un <- xml2::read_html(ovw)
@@ -144,7 +126,6 @@ getSearchReference <- function (x){
    ovx_trois <- xml2::read_html(ovw)
    ovx_trois <- rvest::html_nodes(ovx_trois,"tr td")
    ovx_trois <- rvest::html_text(ovx_trois)
-
    cty <- readLines(ovw,warn = F)
    pat <- "search:taxonomy:countries"
    bcty <- cty[grep(pat,cty)]
@@ -157,10 +138,8 @@ getSearchReference <- function (x){
    for(i in 1:length(stopword)){
      bp <- trimws(stringr::str_replace_all(bp,stopword[i], ""))
    }
-
    country <- bp
    key_contact <- trimws(unlist(strsplit(ovx_deux, "-"))[2])
-
    project_id <- ovx_un[1]
    title  <- getTitle(ovw)
    status <- getStatus(ifelse(length(ovx_un)==7, ovx_un[5],ovx_un[4]))
@@ -178,7 +157,6 @@ getSearchReference <- function (x){
 #' @export
 #'
 getData <- function (x,link){
-
   pg <- link
   val <- x
   valr <- data.frame()
